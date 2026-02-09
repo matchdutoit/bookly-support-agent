@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: bookly-support-agent
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.4
+      - key: OPENAI_API_KEY
+        sync: false  # You'll set this manually in the Render dashboard
