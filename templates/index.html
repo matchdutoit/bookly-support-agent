@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookly Support</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Bookly Support</h1>
+            <button id="reset-btn">New Conversation</button>
+        </div>
+        <div class="chat-messages" id="messages">
+            <div class="message agent">
+                <div class="message-content">
+                    Hi! I'm the Bookly support assistant. I can help you with order status inquiries and return requests. How can I help you today?
+                </div>
+            </div>
+        </div>
+        <div class="typing-indicator" id="typing" style="display: none;">
+            <div class="message agent">
+                <div class="message-content">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
