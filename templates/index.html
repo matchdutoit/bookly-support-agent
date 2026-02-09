@@ -3,14 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookly Support</title>
+    <title>Bookly - Discover Your Next Great Read</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <div class="chat-container">
+    <!-- Hero Section with Full-Width Image -->
+    <section class="hero">
+        <div class="hero-bg" id="hero-bg" style="background-image: url('https://static.vecteezy.com/system/resources/thumbnails/075/036/579/small_2x/open-book-levitating-against-soft-blue-background-with-gentle-shadows-free-photo.jpg');"></div>
+        <!-- Navigation Bar (Overlays Hero) -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="#" class="logo">Bookly</a>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Shop</a>
+                    <a href="#" class="nav-link">New Releases</a>
+                    <a href="#" class="nav-link">Bestsellers</a>
+                    <a href="#" class="nav-link">Blog</a>
+                </div>
+                <div class="nav-actions">
+                    <a href="#" class="nav-link">Log in</a>
+                    <button class="icon-btn cart-btn">
+                        <span class="material-icons">shopping_bag</span>
+                        <span class="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Content -->
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-tag">New arrivals are here</span>
+            <h1 class="hero-headline">Get Lost in<br>a Good Book</h1>
+            <p class="hero-subtitle">Discover stories that stay with you long after the last page. From gripping thrillers to heartwarming tales.</p>
+            <div class="hero-search">
+                <span class="material-icons">search</span>
+                <input type="text" placeholder="Search books, authors, genres...">
+                <button type="submit" class="search-btn">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Books Section -->
+    <section class="section featured-section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Featured Books</h2>
+                <a href="#" class="see-all">See all →</a>
+            </div>
+            <div class="books-grid">
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://covers.openlibrary.org/b/isbn/0525559477-L.jpg" alt="The Midnight Library">
+                        <button class="quick-add">+ Add to Cart</button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">The Midnight Library</h3>
+                        <p class="book-author">Matt Haig</p>
+                        <p class="book-price">$16.99</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://covers.openlibrary.org/b/isbn/0735211299-L.jpg" alt="Atomic Habits">
+                        <button class="quick-add">+ Add to Cart</button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Atomic Habits</h3>
+                        <p class="book-author">James Clear</p>
+                        <p class="book-price">$14.99</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://covers.openlibrary.org/b/isbn/0593135202-L.jpg" alt="Project Hail Mary">
+                        <button class="quick-add">+ Add to Cart</button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Project Hail Mary</h3>
+                        <p class="book-author">Andy Weir</p>
+                        <p class="book-price">$18.99</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://covers.openlibrary.org/b/isbn/0735219095-L.jpg" alt="Where the Crawdads Sing">
+                        <button class="quick-add">+ Add to Cart</button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Where the Crawdads Sing</h3>
+                        <p class="book-author">Delia Owens</p>
+                        <p class="book-price">$15.99</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://covers.openlibrary.org/b/isbn/1250301696-L.jpg" alt="The Silent Patient">
+                        <button class="quick-add">+ Add to Cart</button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">The Silent Patient</h3>
+                        <p class="book-author">Alex Michaelides</p>
+                        <p class="book-price">$13.99</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://covers.openlibrary.org/b/isbn/0399590501-L.jpg" alt="Educated">
+                        <button class="quick-add">+ Add to Cart</button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Educated</h3>
+                        <p class="book-author">Tara Westover</p>
+                        <p class="book-price">$17.99</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promo Banner -->
+    <section class="promo-banner">
+        <div class="promo-content">
+            <h2>Join the Bookly Club</h2>
+            <p>Get 20% off your first order and exclusive access to new releases, author interviews, and reading recommendations.</p>
+            <form class="subscribe-form">
+                <input type="email" placeholder="Enter your email">
+                <button type="submit" class="btn btn-dark">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="section categories-section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Browse by Category</h2>
+            </div>
+            <div class="categories-grid">
+                <a href="#" class="category-card">
+                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80" alt="Fiction">
+                    <div class="category-overlay">
+                        <span>Fiction</span>
+                    </div>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="https://images.unsplash.com/photo-1589998059171-988d887df646?auto=format&fit=crop&w=400&q=80" alt="Non-Fiction">
+                    <div class="category-overlay">
+                        <span>Non-Fiction</span>
+                    </div>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="https://images.unsplash.com/photo-1518744386442-2d48ac47a7eb?auto=format&fit=crop&w=400&q=80" alt="Mystery">
+                    <div class="category-overlay">
+                        <span>Mystery</span>
+                    </div>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="https://images.unsplash.com/photo-1462759353907-b2ea5ebd72e7?auto=format&fit=crop&w=400&q=80" alt="Sci-Fi">
+                    <div class="category-overlay">
+                        <span>Sci-Fi</span>
+                    </div>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="https://images.unsplash.com/photo-1474932430478-367dbb6832c1?auto=format&fit=crop&w=400&q=80" alt="Romance">
+                    <div class="category-overlay">
+                        <span>Romance</span>
+                    </div>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=400&q=80" alt="Biography">
+                    <div class="category-overlay">
+                        <span>Biography</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section testimonials-section">
+        <div class="section-container">
+            <h2>What Readers Say</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"Bookly has completely changed how I discover new books. Their recommendations are always spot on!"</p>
+                    <div class="testimonial-author">
+                        <strong>Sarah M.</strong>
+                        <span>Avid Reader</span>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"Fast shipping, beautiful packaging, and an incredible selection. My go-to bookstore."</p>
+                    <div class="testimonial-author">
+                        <strong>James K.</strong>
+                        <span>Book Collector</span>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"The customer service is exceptional. They helped me find a rare edition I'd been searching for."</p>
+                    <div class="testimonial-author">
+                        <strong>Emily R.</strong>
+                        <span>Literature Professor</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">Bookly</a>
+                    <p>Your destination for discovering incredible books and stories that inspire.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">Instagram</a>
+                        <a href="#" class="social-link">Twitter</a>
+                        <a href="#" class="social-link">Facebook</a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Shop</h4>
+                    <a href="#">New Releases</a>
+                    <a href="#">Bestsellers</a>
+                    <a href="#">Coming Soon</a>
+                    <a href="#">Gift Cards</a>
+                </div>
+                <div class="footer-links">
+                    <h4>About</h4>
+                    <a href="#">Our Story</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Press</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Help</h4>
+                    <a href="#">Contact Us</a>
+                    <a href="#">Shipping</a>
+                    <a href="#">Returns</a>
+                    <a href="#">FAQ</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bookly. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget Button -->
+    <button class="chat-fab" id="chat-fab" title="Chat with Bookly">
+        <span class="material-icons">chat_bubble</span>
+    </button>
+
+    <!-- Chat Drawer Overlay -->
+    <div class="chat-overlay" id="chat-overlay"></div>
+
+    <!-- Chat Drawer -->
+    <div class="chat-drawer" id="chat-drawer">
         <div class="chat-header">
-            <h1>Bookly Support</h1>
-            <button id="reset-btn">New Conversation</button>
+            <h2>Bookly Support</h2>
+            <button class="close-btn" id="close-drawer">
+                <span class="material-icons">close</span>
+            </button>
         </div>
         <div class="chat-messages" id="messages">
             <div class="message agent">
@@ -30,9 +290,13 @@
         </div>
         <div class="chat-input">
             <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
-            <button id="send-btn">Send</button>
+            <button id="send-btn">
+                <span class="material-icons">send</span>
+            </button>
         </div>
+        <button class="reset-link" id="reset-btn">Start New Conversation</button>
     </div>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

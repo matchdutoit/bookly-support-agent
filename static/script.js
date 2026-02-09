@@ -1,9 +1,90 @@
+// Navbar scroll behavior
+const navbar = document.querySelector('.navbar');
+const hero = document.querySelector('.hero');
+const heroBg = document.getElementById('hero-bg');
+
+function handleNavbarScroll() {
+    if (window.scrollY > hero.offsetHeight - 100) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+}
+
+// Parallax scroll effect for hero background
+const parallaxSpeed = 0.5; // Background moves at 50% of scroll speed
+
+function handleParallax() {
+    if (window.innerWidth > 768) { // Only on desktop
+        const scrolled = window.scrollY;
+        const heroHeight = hero.offsetHeight;
+
+        // Only apply parallax while hero is visible
+        if (scrolled <= heroHeight) {
+            const yPos = scrolled * parallaxSpeed;
+            heroBg.style.transform = `translate3d(0, ${yPos}px, 0)`;
+        }
+    } else {
+        heroBg.style.transform = 'translate3d(0, 0, 0)';
+    }
+}
+
+function onScroll() {
+    handleNavbarScroll();
+    requestAnimationFrame(handleParallax);
+}
+
+window.addEventListener('scroll', onScroll);
+window.addEventListener('resize', handleParallax);
+handleNavbarScroll(); // Check on load
+handleParallax(); // Initialize parallax
+
+// Chat drawer elements
+const chatFab = document.getElementById('chat-fab');
+const chatDrawer = document.getElementById('chat-drawer');
+const chatOverlay = document.getElementById('chat-overlay');
+const closeDrawer = document.getElementById('close-drawer');
+
+// Chat interface elements
 const messagesContainer = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 const resetBtn = document.getElementById('reset-btn');
 const typingIndicator = document.getElementById('typing');
 
+// Drawer state
+let isDrawerOpen = false;
+
+// Toggle drawer functions
+function openChatDrawer() {
+    isDrawerOpen = true;
+    chatDrawer.classList.add('open');
+    chatOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Focus input when drawer opens
+    setTimeout(() => userInput.focus(), 300);
+}
+
+function closeChatDrawer() {
+    isDrawerOpen = false;
+    chatDrawer.classList.remove('open');
+    chatOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Drawer event listeners
+chatFab.addEventListener('click', openChatDrawer);
+closeDrawer.addEventListener('click', closeChatDrawer);
+chatOverlay.addEventListener('click', closeChatDrawer);
+
+// Close drawer on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isDrawerOpen) {
+        closeChatDrawer();
+    }
+});
+
+// Chat functionality
 function addMessage(content, sender) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${sender}`;
@@ -90,7 +171,7 @@ async function resetConversation() {
     }
 }
 
-// Event listeners
+// Chat event listeners
 sendBtn.addEventListener('click', sendMessage);
 
 userInput.addEventListener('keypress', (e) => {
@@ -100,6 +181,3 @@ userInput.addEventListener('keypress', (e) => {
 });
 
 resetBtn.addEventListener('click', resetConversation);
-
-// Focus input on page load
-userInput.focus();
