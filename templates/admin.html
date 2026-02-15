@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matchagon Admin Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+    <div class="portal-shell">
+        <aside class="sidebar">
+            <div class="brand-wrap">
+                <span class="brand-dot" aria-hidden="true"></span>
+                <div>
+                    <p class="brand-label">Agent Platform</p>
+                    <h1 class="brand-name">Matchagon</h1>
+                </div>
+            </div>
+
+            <nav class="nav-stack">
+                <button class="nav-item active" data-page="home">Home</button>
+                <button class="nav-item" data-page="convos">Convos</button>
+                <button class="nav-item" data-page="build">Build</button>
+            </nav>
+
+            <a class="side-link" href="/">Open Customer Site</a>
+        </aside>
+
+        <main class="portal-main">
+            <section class="page active" id="page-home">
+                <header class="page-header">
+                    <h2>Performance Overview</h2>
+                    <p>30-day operational snapshot for your support agent.</p>
+                </header>
+
+                <div class="metric-grid">
+                    <article class="metric-card metric-emphasis">
+                        <p class="metric-label">Deflection Rate</p>
+                        <h3 class="metric-value" id="metric-deflection">0%</h3>
+                        <p class="metric-detail">Resolved conversations divided by total conversations</p>
+                    </article>
+                    <article class="metric-card">
+                        <p class="metric-label">Avg User Messages / Convo</p>
+                        <h3 class="metric-value" id="metric-avg-user-messages">0</h3>
+                        <p class="metric-detail">Average user turns needed to close a conversation</p>
+                    </article>
+                    <article class="metric-card">
+                        <p class="metric-label">Most Common Topic</p>
+                        <h3 class="metric-value" id="metric-top-topic">-</h3>
+                        <p class="metric-detail">Most frequent categorized issue over last 30 days</p>
+                    </article>
+                </div>
+
+                <div class="chart-grid">
+                    <article class="chart-card">
+                        <div class="card-header-row">
+                            <h3>Conversation Topic Mix</h3>
+                        </div>
+                        <div class="donut-layout">
+                            <div class="donut" id="home-topic-donut"></div>
+                            <div class="legend" id="home-topic-legend"></div>
+                        </div>
+                    </article>
+                    <article class="chart-card">
+                        <div class="card-header-row">
+                            <h3>Disposition Breakdown</h3>
+                        </div>
+                        <div class="bars" id="home-disposition-bars"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="page" id="page-convos">
+                <header class="page-header">
+                    <h2>Conversation Audit</h2>
+                    <p>Filter and inspect support conversations from the last 30 days.</p>
+                </header>
+
+                <article class="chart-card convo-top-card">
+                    <div class="card-header-row">
+                        <h3>Topic Breakdown</h3>
+                    </div>
+                    <div class="donut-layout">
+                        <div class="donut" id="convos-topic-donut"></div>
+                        <div class="legend" id="convos-topic-legend"></div>
+                    </div>
+                </article>
+
+                <article class="list-card">
+                    <div class="filter-row">
+                        <label>
+                            Topic
+                            <select id="filter-topic"></select>
+                        </label>
+                        <label>
+                            Min User Messages
+                            <input type="number" id="filter-min-messages" min="0" placeholder="0">
+                        </label>
+                        <label>
+                            Max User Messages
+                            <input type="number" id="filter-max-messages" min="0" placeholder="No limit">
+                        </label>
+                        <button class="btn btn-primary" id="apply-filters">Apply Filters</button>
+                        <button class="btn btn-ghost" id="clear-filters">Clear</button>
+                    </div>
+
+                    <div class="convo-list" id="convo-list"></div>
+                </article>
+            </section>
+
+            <section class="page" id="page-build">
+                <header class="page-header">
+                    <h2>Agent Builder</h2>
+                    <p>Edit core agent instructions and Python tool functions in place.</p>
+                </header>
+
+                <div class="tab-row">
+                    <button class="tab-item active" data-tab="aop">AOP</button>
+                    <button class="tab-item" data-tab="tools">Tools</button>
+                </div>
+
+                <div class="tab-panel active" id="tab-aop">
+                    <div class="panel-header">
+                        <h3>agents.md</h3>
+                        <div>
+                            <button class="btn btn-primary" id="save-aop">Save</button>
+                            <span class="status-text" id="aop-status"></span>
+                        </div>
+                    </div>
+                    <textarea class="editor md-editor" id="aop-editor" spellcheck="false"></textarea>
+                </div>
+
+                <div class="tab-panel" id="tab-tools">
+                    <div class="panel-header">
+                        <h3>Tool Functions</h3>
+                        <button class="btn btn-primary" id="open-add-tool">Add Tool</button>
+                    </div>
+                    <div id="tools-list" class="tools-list"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+
+    <aside class="drawer" id="conversation-drawer" aria-hidden="true">
+        <header class="drawer-header">
+            <div>
+                <p class="drawer-eyebrow">Conversation Detail</p>
+                <h3 id="drawer-title">Conversation</h3>
+            </div>
+            <button class="icon-close" id="close-conversation-drawer">×</button>
+        </header>
+        <div class="drawer-meta" id="drawer-meta"></div>
+        <div class="drawer-content" id="drawer-messages"></div>
+    </aside>
+
+    <aside class="drawer" id="add-tool-drawer" aria-hidden="true">
+        <header class="drawer-header">
+            <div>
+                <p class="drawer-eyebrow">Add Tool</p>
+                <h3>Create New Python Tool</h3>
+            </div>
+            <button class="icon-close" id="close-add-tool-drawer">×</button>
+        </header>
+        <div class="drawer-content form-content">
+            <label>
+                Tool Name
+                <input type="text" id="new-tool-name" placeholder="e.g. lookup_membership_status">
+            </label>
+            <label>
+                Description
+                <textarea id="new-tool-description" rows="3" placeholder="What this tool does and when the agent should call it."></textarea>
+            </label>
+            <label>
+                Parameters (JSON Schema)
+                <textarea id="new-tool-parameters" rows="10" spellcheck="false">{
+  "type": "object",
+  "properties": {},
+  "required": []
+}</textarea>
+            </label>
+            <label>
+                Python Function Code
+                <textarea id="new-tool-code" rows="14" spellcheck="false" placeholder="def your_tool_name(...):\n    ..."></textarea>
+            </label>
+            <div class="add-tool-actions">
+                <button class="btn btn-primary" id="save-new-tool">Create Tool</button>
+                <span class="status-text" id="new-tool-status"></span>
+            </div>
+        </div>
+    </aside>
+
+    <script src="{{ url_for('static', filename='admin.js') }}"></script>
+</body>
+</html>
