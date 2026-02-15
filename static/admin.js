@@ -155,6 +155,9 @@ function renderBars(containerId, data, labelKey) {
 }
 
 function setMetricValues(metrics) {
+    document.getElementById("metric-total-conversations").textContent = Number(
+        metrics.total_conversations || 0,
+    ).toLocaleString();
     document.getElementById("metric-deflection").textContent = formatPercent(metrics.deflection_rate);
     document.getElementById("metric-avg-user-messages").textContent = Number(metrics.avg_user_messages || 0).toFixed(1);
     document.getElementById("metric-top-topic").textContent = metrics.most_common_topic_label || "-";
