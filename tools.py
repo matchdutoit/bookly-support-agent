@@ -3,7 +3,7 @@ Tool functions and definitions for the Bookly support agent.
 """
 
 import json
-from mock_data import get_order_by_id, get_orders_by_email
+from mock_data import get_order_by_id, get_orders_by_email, upsert_refund_record
 
 
 # Reasons that qualify for cash refund
@@ -91,7 +91,7 @@ def initiate_return(order_id, reason, refund_type=None):
         # Default to store credit for unrecognized reasons
         determined_refund_type = refund_type or "store_credit"
 
-    return {
+    return_payload = {
         "success": True,
         "return_id": f"RET-{order_id.split('-')[1]}",
         "order_id": order_id,
@@ -100,6 +100,14 @@ def initiate_return(order_id, reason, refund_type=None):
         "refund_type": determined_refund_type,
         "instructions": "Please pack the item(s) securely. A prepaid return label will be sent to your email within 24 hours. Once we receive the return, your refund will be processed within 3-5 business days."
     }
+
+    # Seed/update refund lifecycle data so refund status lookups can be demoed.
+    refund_method = "store_credit" if determined_refund_type == "store_credit" else "original_payment"
+    refund_record = upsert_refund_record(order_id=order_id, refund_method=refund_method)
+    return_payload["refund_status"] = refund_record["refund_status"]
+    return_payload["estimated_refund_completion"] = refund_record["estimated_completion"]
+
+    return return_payload
 
 
 def execute_tool(tool_name, arguments):
