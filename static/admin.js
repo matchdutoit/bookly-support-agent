@@ -22,6 +22,9 @@ const addToolDrawer = document.getElementById("add-tool-drawer");
 
 const convoList = document.getElementById("convo-list");
 const filterTopic = document.getElementById("filter-topic");
+const filterStatus = document.getElementById("filter-status");
+const filterTimeRange = document.getElementById("filter-time-range");
+const filterSort = document.getElementById("filter-sort");
 const filterMinMessages = document.getElementById("filter-min-messages");
 const filterMaxMessages = document.getElementById("filter-max-messages");
 
@@ -72,6 +75,17 @@ function formatDate(isoString) {
     }
 
     return date.toLocaleString();
+}
+
+function getSortValue() {
+    return filterSort.dataset.sort === "oldest" ? "oldest" : "newest";
+}
+
+function setSortButton(sortValue) {
+    filterSort.dataset.sort = sortValue === "oldest" ? "oldest" : "newest";
+    filterSort.textContent = filterSort.dataset.sort === "oldest"
+        ? "Oldest to Newest"
+        : "Newest to Oldest";
 }
 
 function renderDonut({ donutId, legendId, data, labelKey }) {
@@ -215,10 +229,16 @@ async function loadMetricsAndCharts() {
 }
 
 function getConvoFilters() {
-    const params = new URLSearchParams({ days: "30" });
+    const params = new URLSearchParams();
+    params.append("days", filterTimeRange.value || "30");
+    params.append("sort", getSortValue());
 
     if (filterTopic.value && filterTopic.value !== "all") {
         params.append("topic", filterTopic.value);
+    }
+
+    if (filterStatus.value && filterStatus.value !== "all") {
+        params.append("status", filterStatus.value);
     }
 
     if (filterMinMessages.value !== "") {
@@ -230,6 +250,27 @@ function getConvoFilters() {
     }
 
     return params.toString();
+}
+
+function buildTopicBreakdownFromConversations(conversations) {
+    const countsByTopic = new Map();
+
+    (conversations || []).forEach((conversation) => {
+        const topicKey = conversation.topic || "general_inquiry";
+        const existing = countsByTopic.get(topicKey);
+        if (existing) {
+            existing.count += 1;
+            return;
+        }
+
+        countsByTopic.set(topicKey, {
+            topic: topicKey,
+            topic_label: conversation.topic_label || topicKey,
+            count: 1,
+        });
+    });
+
+    return [...countsByTopic.values()].sort((a, b) => b.count - a.count);
 }
 
 function renderConversationList(conversations) {
@@ -261,6 +302,13 @@ async function loadConversations() {
     const query = getConvoFilters();
     const data = await fetchJSON(`/api/admin/conversations?${query}`);
     renderConversationList(data.conversations);
+
+    renderDonut({
+        donutId: "convos-topic-donut",
+        legendId: "convos-topic-legend",
+        data: buildTopicBreakdownFromConversations(data.conversations),
+        labelKey: "topic_label",
+    });
 }
 
 function openDrawer(drawerElement) {
@@ -483,8 +531,19 @@ function bindEvents() {
 
     document.getElementById("clear-filters").addEventListener("click", () => {
         filterTopic.value = "all";
+        filterStatus.value = "all";
+        filterTimeRange.value = "30";
+        setSortButton("newest");
         filterMinMessages.value = "";
         filterMaxMessages.value = "";
+        loadConversations().catch((error) => {
+            convoList.innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;
+        });
+    });
+
+    filterSort.addEventListener("click", () => {
+        const nextSort = getSortValue() === "newest" ? "oldest" : "newest";
+        setSortButton(nextSort);
         loadConversations().catch((error) => {
             convoList.innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;
         });
@@ -547,6 +606,7 @@ async function bootstrap() {
     bindEvents();
     activatePage("home");
     activateTab("aop");
+    setSortButton("newest");
 
     try {
         await Promise.all([loadMetricsAndCharts(), loadConversations(), loadAop()]);

@@ -265,13 +265,14 @@ body {
 .legend {
     display: grid;
     gap: 8px;
+    justify-items: start;
 }
 
 .legend-item {
-    display: flex;
-    justify-content: space-between;
+    display: inline-flex;
+    justify-content: flex-start;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     color: var(--muted);
     font-size: 13px;
 }
@@ -319,7 +320,7 @@ body {
 
 .filter-row {
     display: grid;
-    grid-template-columns: 1.3fr 1fr 1fr auto auto;
+    grid-template-columns: repeat(6, minmax(0, 1fr)) auto auto;
     gap: 10px;
     align-items: end;
     margin-bottom: 12px;
@@ -376,6 +377,15 @@ textarea:focus {
 .btn-ghost {
     background: #edf2ff;
     color: #2b3f73;
+}
+
+.sort-toggle {
+    width: 100%;
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .convo-list {

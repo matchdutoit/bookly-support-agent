@@ -101,6 +101,31 @@
                             <select id="filter-topic"></select>
                         </label>
                         <label>
+                            Status
+                            <select id="filter-status">
+                                <option value="all" selected>All Statuses</option>
+                                <option value="resolved">Resolved</option>
+                                <option value="escalated">Escalated</option>
+                                <option value="open">Open</option>
+                            </select>
+                        </label>
+                        <label>
+                            Time Range
+                            <select id="filter-time-range">
+                                <option value="1">Last 24 Hrs</option>
+                                <option value="7">Last Week</option>
+                                <option value="14">Last 2 Weeks</option>
+                                <option value="30" selected>Last 30 Days</option>
+                                <option value="none">None</option>
+                            </select>
+                        </label>
+                        <label>
+                            Sort By
+                            <button type="button" class="btn btn-ghost sort-toggle" id="filter-sort" data-sort="newest">
+                                Newest to Oldest
+                            </button>
+                        </label>
+                        <label>
                             Min User Messages
                             <input type="number" id="filter-min-messages" min="0" placeholder="0">
                         </label>

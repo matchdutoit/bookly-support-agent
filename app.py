@@ -32,6 +32,17 @@ def _parse_optional_int(raw_value: str | None) -> int | None:
         raise ValueError(f"Invalid integer value: {raw_value}") from error
 
 
+def _parse_days_filter(raw_value: str | None) -> int | None:
+    if raw_value is None or raw_value == "":
+        return 30
+    if raw_value.lower() == "none":
+        return None
+    try:
+        return int(raw_value)
+    except ValueError as error:
+        raise ValueError(f"Invalid days value: {raw_value}") from error
+
+
 @app.route("/")
 def index():
     """Serve the customer-facing chat interface."""
@@ -86,8 +97,10 @@ def admin_metrics():
 def admin_conversations():
     """Return filtered conversation list for the past N days."""
     try:
-        days = int(request.args.get("days", 30))
+        days = _parse_days_filter(request.args.get("days", "30"))
         topic = request.args.get("topic") or None
+        status = request.args.get("status") or None
+        sort = request.args.get("sort", "newest").lower()
         min_user_messages = _parse_optional_int(request.args.get("min_user_messages"))
         max_user_messages = _parse_optional_int(request.args.get("max_user_messages"))
     except ValueError as error:
@@ -95,12 +108,25 @@ def admin_conversations():
 
     if topic == "all":
         topic = None
+    if status == "all":
+        status = None
+
+    sort_map = {
+        "newest": "desc",
+        "oldest": "asc",
+        "desc": "desc",
+        "asc": "asc",
+    }
+    if sort not in sort_map:
+        return jsonify({"success": False, "error": f"Invalid sort value: {sort}"}), 400
 
     conversations = conversation_manager.audit_store.list_conversations(
         days=days,
         topic=topic,
+        disposition=status,
         min_user_messages=min_user_messages,
         max_user_messages=max_user_messages,
+        sort_order=sort_map[sort],
     )
     return jsonify({"success": True, "conversations": conversations})
 

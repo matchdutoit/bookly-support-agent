@@ -271,21 +271,34 @@ class ConversationAuditStore:
     def list_conversations(
         self,
         *,
-        days: int = 30,
+        days: int | None = 30,
         topic: str | None = None,
+        disposition: str | None = None,
         min_user_messages: int | None = None,
         max_user_messages: int | None = None,
+        sort_order: str = "desc",
     ) -> list[dict[str, Any]]:
         """List conversations with optional topic and length filters."""
-        cutoff = datetime.utcnow() - timedelta(days=days)
-        cutoff_iso = cutoff.replace(microsecond=0).isoformat() + "Z"
+        normalized_sort_order = sort_order.lower()
+        if normalized_sort_order not in {"asc", "desc"}:
+            normalized_sort_order = "desc"
 
-        where_parts = ["c.updated_at >= ?"]
-        params: list[Any] = [cutoff_iso]
+        where_parts: list[str] = []
+        params: list[Any] = []
+
+        if days is not None:
+            cutoff = datetime.utcnow() - timedelta(days=days)
+            cutoff_iso = cutoff.replace(microsecond=0).isoformat() + "Z"
+            where_parts.append("c.updated_at >= ?")
+            params.append(cutoff_iso)
 
         if topic:
             where_parts.append("c.topic = ?")
             params.append(_normalize_topic(topic))
+
+        if disposition:
+            where_parts.append("c.disposition = ?")
+            params.append(_normalize_disposition(disposition))
 
         if min_user_messages is not None:
             where_parts.append("c.user_message_count >= ?")
@@ -295,7 +308,7 @@ class ConversationAuditStore:
             where_parts.append("c.user_message_count <= ?")
             params.append(max_user_messages)
 
-        where_clause = " AND ".join(where_parts)
+        where_clause = " AND ".join(where_parts) if where_parts else "1 = 1"
 
         query = f"""
             SELECT
@@ -316,7 +329,7 @@ class ConversationAuditStore:
                 ) AS last_user_message
             FROM conversations c
             WHERE {where_clause}
-            ORDER BY c.updated_at DESC
+            ORDER BY c.updated_at {normalized_sort_order.upper()}
         """
 
         with self._connect() as connection:
